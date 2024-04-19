@@ -1,2 +1,2 @@
-export const BASE_URL = "https://localhost:8080/gateway";
+export const BASE_URL = "http://localhost:8000/";
 export const ACCESS_TOKEN = "UGABUNGA"
