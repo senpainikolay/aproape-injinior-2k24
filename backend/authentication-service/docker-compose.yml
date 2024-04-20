@@ -1,0 +1,26 @@
+version: '3.1'
+
+services:
+  postgres:
+    image: postgres:16.0
+    container_name: postgres_auth
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres-db:/data/postgres
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=user
+      - POSTGRES_DB=test_db 
+  
+  pg-admin:
+    image: dpage/pgadmin4
+    container_name: pgadmin_auth
+    ports:
+      - 5050:80
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=ok@gmail.com
+      - PGADMIN_DEFAULT_PASSWORD=password
+volumes:
+  postgres-db:
+    driver: local 
