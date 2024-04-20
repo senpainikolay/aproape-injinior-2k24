@@ -4,6 +4,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
 import { useNavigate } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
 import {
   Badge,
   Box,
@@ -17,19 +18,40 @@ import {
   MenuItem,
   Tooltip
 } from "@mui/material";
-import { useContext, useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 import React from "react";
 import { Settings, Logout, ExpandLess, ExpandMore, Language } from "@mui/icons-material";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import WalletIcon from '@mui/icons-material/Wallet';
 import { useTranslation } from "react-i18next";
 
+import { GetNameResponse } from "../models/User";
+import { UserService } from "../services/UserService";
+
+
+
+const userService = new UserService();
+
 
 const ResponsiveAppBar = () => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const { auth, setAuth } = useAuth();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userDetails, setUserDetails] = useState({} as GetNameResponse);
   const [openLanguages, setOpenLanguages] = useState(false);
+
+
+  useEffect(() => {
+    if (auth?.isLoggedIn) {
+      setIsLoggedIn(true);
+
+      userService.get()
+        .then((response: GetNameResponse) => {
+          setUserDetails(response)})
+        
+    }
+  }, [auth]);
 
 
 
@@ -90,8 +112,7 @@ const ResponsiveAppBar = () => {
                      <Badge variant="dot" invisible={0 === 0} color="warning" sx={{ marginRight: 1 }}>
                       <AccountCircleIcon />
                     </Badge>
-                  
-                    <p> Nicu Marius</p>
+                    {userDetails.name} 
                   </IconButton>
                 </Tooltip>
               </Box>
@@ -103,7 +124,6 @@ const ResponsiveAppBar = () => {
                   handleClose();
                   handleCloseSettings();
                 }}
-                PaperProps={styles.menuPaper}
                 transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                 anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
               >
@@ -125,7 +145,7 @@ const ResponsiveAppBar = () => {
                       <ListItemIcon sx={styles.settingsIcons}>
                         <WalletIcon />
                       </ListItemIcon>
-                      <ListItemText primary={t('accountss')} />
+                      <ListItemText primary={t('accounts')} />
                     </ListItemButton>
                   </List>
                 </Collapse>
@@ -149,7 +169,8 @@ const ResponsiveAppBar = () => {
                       <ListItemText primary="En" />
                     </ListItemButton>
                   </List>
-                </Collapse>
+                </Collapse> 
+
                 <MenuItem onClick={() => {
                   handleClose();
                   handleCloseSettings();
@@ -159,6 +180,9 @@ const ResponsiveAppBar = () => {
                   </ListItemIcon>
                   {t('log_out')}
                 </MenuItem>
+            
+
+
               </Menu>
             </React.Fragment>
           )}

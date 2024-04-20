@@ -4,6 +4,11 @@ from dotenv import load_dotenv
 from models import User,TokenBlocklist
 from auth import auth_bp
 
+from datetime import timedelta
+
+from flask_cors import CORS
+
+
 load_dotenv()
 
 
@@ -11,8 +16,10 @@ load_dotenv()
 def create_app():
 
     app = Flask(__name__)
-
     app.config.from_prefixed_env()
+    CORS(app)
+    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=10)
+    app.config["JWT_REFRESH_TOKEN_EXPIRES"] = timedelta(days=1)
 
     db.init_app(app)
     jwt.init_app(app)

@@ -1,7 +1,7 @@
-// import { PaginationResponse } from "../Models/PaginationResponse";
 import { Transaction } from "../models/Transaction";
 import { Account,AccountPost } from "../models/Account";
 import { PaginationResponse} from "../models/PaginationResponse";
+import axios from "axios";
 
 import  AuthorizedApi from "./AuthorizedApi"; 
 
@@ -9,14 +9,17 @@ import  AuthorizedApi from "./AuthorizedApi";
 
 const USER_ID = "f0722015-f1d6-4029-8e5e-9e0b7cf8910b"; 
 
+const url_EX = "http://localhost:8000" 
+
+
 
 
 export class AccountService extends AuthorizedApi {
 
   public getAll = async (): Promise<Account[]> => {
-    let instance = await this.getInstance();
-    return instance
-      .get(`/users/` + USER_ID + `/accounts/` )
+    // let instance = await this.getInstance();
+    return axios
+      .get( url_EX + `/users/` + USER_ID + `/accounts/` )
       .then((response) => {
         return response.data as Account[];
       })
@@ -27,16 +30,16 @@ export class AccountService extends AuthorizedApi {
   };
 
   public getById = async ( accountId: string ): Promise<Account> => { 
-    let instance = await this.getInstance();
+    //let instance = await this.getInstance();
 
-    return instance.get(`/users/` + USER_ID + `/accounts/` + accountId )
+    return axios.get( url_EX + `/users/` + USER_ID + `/accounts/` + accountId )
     .then(response => response.data as Account )
     .catch(error => Promise.reject(error) );
   };
 
   async addAccount(account: AccountPost): Promise<void> {
-    let instance = await this.getInstance();
-    return instance.post(`/users/` + USER_ID + `/accounts/`, account);
+    //let instance = await this.getInstance();
+    return axios.post(url_EX + `/users/` + USER_ID + `/accounts/`, account);
   }
 
   public getTransactions = async (

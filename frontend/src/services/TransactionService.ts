@@ -5,15 +5,16 @@ import AuthorizedApi from "./AuthorizedApi";
 import axios from "axios";
 
 
+const url_ext = "http://localhost:8000" 
   
-  export class TransactionService extends AuthorizedApi {
+export class TransactionService extends AuthorizedApi {
    
     public async addTransaction(
       account_id : string,
       addTransactionRequest: AddTransactionRequest
     ): Promise<void> {
-      const instance = await this.getInstance();
-      return instance.post(`/accounts/` + account_id + `/transactions/`, addTransactionRequest);
+      //const instance = await this.getInstance();
+      return axios.post( url_ext + `/accounts/` + account_id + `/transactions/`, addTransactionRequest);
     }
 
     public async processImageInput(
@@ -25,8 +26,8 @@ import axios from "axios";
     public async getTransactionsTimeSeriesPerAccount(
       account_id : string = "3833dd4d-1d70-4ce2-ad1a-cd5713da25e1",
     ): Promise<TransactionBalanceTimeSeries[]> {
-      const instance = await this.getInstance();
-      return instance.get(`/accounts/` + account_id + `/balance/timeseries`)
+      // const instance = await this.getInstance();
+      return axios.get( url_ext + `/accounts/` + account_id + `/balance/timeseries`)
       .then((response) => {
         return response.data as TransactionBalanceTimeSeries[];
       })

@@ -1,11 +1,11 @@
-import { Autocomplete, Backdrop, Button, CircularProgress, Dialog, FormControl, InputLabel, ListItem, MenuItem, Select, Stack, TextField, Typography } from "@mui/material";
+import {  Backdrop, Button, CircularProgress, Dialog, FormControl, InputLabel,  MenuItem, Select, Stack, TextField } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { FormikErrors, useFormik } from 'formik';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { TransactionService } from "../../services/TransactionService";
-import { AddTransactionRequest, TransactionType, ImgTransactionData } from "../../models/Transaction";
+import { AddTransactionRequest, TransactionType } from "../../models/Transaction";
 import utc from "dayjs/plugin/utc";
 import {useTranslation} from "react-i18next";
 import { showErrorMessage } from "../../utils/toast";
@@ -67,7 +67,7 @@ export const AddTransactionPopup = (props: AddTransactionPopupProps) => {
                 return;
             const addTransactionRequest: AddTransactionRequest = {
                 amount: Number(values.amount),
-                transaction_type_id: values.transactionType == 1 ?  "fd9bf026-338a-4372-bd48-8509a47e877c" : "4a047173-0729-485f-9608-9a99dfb1c8a3",
+                transaction_type_id: values.transactionType === 1 ?  "fd9bf026-338a-4372-bd48-8509a47e877c" : "4a047173-0729-485f-9608-9a99dfb1c8a3",
                 datetime: values.date.utc().toDate().toISOString(),
                 description: values.description,
                 payee: values.payee,

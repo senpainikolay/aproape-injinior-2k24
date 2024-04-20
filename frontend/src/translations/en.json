@@ -52,6 +52,9 @@
   "type": "Type",
   "note": "Note",
   "amount": "Amount",
+  "already_logged_in" : "You are alredy logged in!",
+  "redirect" : "you are being redirected in 5 seconds!",
+  "go_to_homepage" : "Go To Dashboard",
   "add_transaction": "Add transaction",
   "transaction_add_success": "Transaction added with success",
   "transaction_add_fail": "Failed to add the transaction",
@@ -68,12 +71,5 @@
   "export_transaction_data": "Export Transaction Data",
   "select_file_type": "Select the file format for exporting transaction data:",
   "file_format": "File format",
-  "export": "Export",
-  "already_logged_in": "You are already logged in!",
-  "redirect": "You will be automatically redirected to the homepage in 5 seconds.",
-  "go_to_homepage": "Go to homepage now",
-  "show_months": {
-    "beginning": "Show",
-    "end": "Months"
-  }
+  "export": "Export"
 }

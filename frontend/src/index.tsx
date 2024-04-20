@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import { ToastContainer } from 'react-toastify'; 
 import { BrowserRouter } from 'react-router-dom';
+import { AuthProvider } from './context/AuthProvider';
 import './i18n';
 
 
@@ -14,7 +15,9 @@ const root = ReactDOM.createRoot(
 );
 root.render(
     <BrowserRouter>
+    <AuthProvider>
     <App />
+    </AuthProvider>
     <ToastContainer />
     </BrowserRouter>
 );

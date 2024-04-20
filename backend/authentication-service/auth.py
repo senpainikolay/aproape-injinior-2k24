@@ -1,7 +1,6 @@
 from flask import Blueprint, jsonify, request
 from models import User, TokenBlocklist
 from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required,get_jwt_identity,current_user,get_jwt
-from datetime import datetime
 auth_bp = Blueprint("auth", __name__)
 
 
@@ -28,7 +27,7 @@ def login_user():
     user = User.get_user_by_email(email=data.get("email"))
 
     if user and (user.check_password(password=data.get("password"))):
-        access_token = create_access_token(identity=user.id, fresh=datetime.timedelta(minutes=10))
+        access_token = create_access_token(identity=user.id )
         refresh_token = create_refresh_token(identity=user.id)
 
         return (
@@ -49,11 +48,7 @@ def login_user():
 def whoami():
     return jsonify(
         {
-            "message": "message",
-            "user_details": {
-                "username": current_user.name,
-                "email": current_user.email,
-            },
+            "name": current_user.name,
         }
     )
 
