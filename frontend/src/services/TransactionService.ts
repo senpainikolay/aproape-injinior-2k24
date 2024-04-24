@@ -19,8 +19,8 @@ export class TransactionService extends AuthorizedApi {
 
     public async processImageInput(
       img?:File
-    ): Promise<ImgTransactionData> {
-      return axios.post(`http://localhost:8001/processImage/`, img).then(res => res.data["data"] as ImgTransactionData ).catch(err => Promise.reject(err))
+    ): Promise<ImgTransactionData > {
+      return axios.post(`http://localhost:8001/ocr/process`, img).then(res => res.data as ImgTransactionData ).catch(err => Promise.reject(err))
     }
 
     public async getTransactionsTimeSeriesPerAccount(
