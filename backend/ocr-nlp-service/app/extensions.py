@@ -6,6 +6,7 @@ from paddleocr import PaddleOCR
 import spacy
 import os,io
 from dotenv import load_dotenv
+import cv2
 load_dotenv()
 
 
@@ -13,12 +14,12 @@ OCR_ENGINE = PaddleOCR(use_angle_cls=True, use_space_char=True)
 SPACY_NLP_MODEL  = spacy.load(str(os.environ.get("NLP_CORPUS_MODEL")))
 
 
-
-
-class ImageProcessor:    
+class ImagePreProcessor:    
     def apply_changes(self,img):
         image_np = np.array(Image.open(io.BytesIO(img)))
-        return self.__orient_vertical(image_np)
+        rotated = self.__orient_vertical(image_np)
+        #enhanced = self.__enhance_txt(rotated)
+        return rotated
     
     def __orient_vertical(self,img):
         width = img.shape[1]
@@ -28,6 +29,15 @@ class ImageProcessor:
         else:
             rotated = img
         return rotated
+    
+    def __enhance_txt(img):
+        threshold = np.mean(img) * 0.98  
+
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        blurred = cv2.GaussianBlur(gray, (1, 1), 0)
+
+        _, binary = cv2.threshold(blurred, threshold, 255, cv2.THRESH_BINARY)
+        return binary
     
 
 

@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+
+    ocr_nlp_service:
+      build: ocr-nlp-service
+      environment:
+      - FLASK_SECRET_KEY=RANDOMSTRING
+      - FLASK_DEBUG=True
+      - NLP_CORPUS_MODEL=ro_core_news_sm
+      - PORT=8001
+      - F_SECRET=Zrgt-X5lZmllFGLp7aEZiLSgBuMto64GUofPwJnVZDE=
+      - H_SECRET=WTF
+      deploy:
+        replicas: 2
+
+    nginx:
+      container_name: nginx-load-balancer
+      build: nginx
+      ports:
+          - 8123:8123
+      depends_on:
+          - ocr_nlp_service

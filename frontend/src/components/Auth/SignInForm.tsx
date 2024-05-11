@@ -43,7 +43,7 @@ const InnerForm = (props: SignUpMessageProp & FormikProps<FormValues>) => {
     const {values, errors, message} = props;
     return (
         <Form className="form">
-            <Typography sx={{fontSize: 35}}>{message}</Typography>
+            <Typography sx={styles.textS} >{message}</Typography>
             <Grid container justifyContent="center">
                 <Grid item xs={10} sm={10} lg={8} xl={7}>
                     <Field
@@ -154,6 +154,8 @@ export default SignInForm
 
 
 const styles: { [key: string]: any } = {
+    textS: { fontSize: 35, marginTop: "3em", textAlign: "center", },
+
     fieldInput: {
         width: "100%",
         marginTop: "10px",

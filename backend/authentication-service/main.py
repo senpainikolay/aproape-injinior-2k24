@@ -18,7 +18,7 @@ def create_app():
     app = Flask(__name__)
     app.config.from_prefixed_env()
     CORS(app)
-    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=10)
+    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=100)
     app.config["JWT_REFRESH_TOKEN_EXPIRES"] = timedelta(days=1)
 
     db.init_app(app)

@@ -107,7 +107,6 @@ export const AccountComponent = (props: IAccountComponentProps) => {
                         ?
                         <>
                             <Typography variant="h4">{props.account.name}</Typography>
-                            <Typography variant="h6">{t('currently_this_month')}</Typography>
                             <Button sx={styles.exportButton} variant="contained"
                                     onClick={() => setIsExportTransactionsPopupOpen(true)}>{t('export_data')}</Button>
                             <ExportTransactionsPopup {...exportTransactionsPopupProps} />

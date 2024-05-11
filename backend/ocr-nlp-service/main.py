@@ -4,6 +4,6 @@ import os
 load_dotenv()
 
 if __name__ == "__main__":
-    create_app().run(port=os.environ.get("PORT"))
+    create_app().run( host='0.0.0.0', port=os.environ.get("PORT"))
 
 
