@@ -13,19 +13,15 @@ IMG_PROCESSOR = ImagePreProcessor()
 
 @ocr_bp.post("/process")
 def process_img():
-    data = request.files['img']
-    img_bytes = data.read()
-    #encrypted_data = request.json['image']
-    #received_hmac = request.json['hmac']
+    encrypted_data = request.form['enimg']
+    received_hmac = request.form['hmac']
 
-    #decrypted_data = decrypt_data(encrypted_data)
+    if not verify_hmac(encrypted_data.encode(), received_hmac):
+        return jsonify({'error': 'HMAC verification failed'}), 400
 
-    
-    #if not verify_hmac(decrypted_data, received_hmac):
-    #    return jsonify({'error': 'HMAC verification failed'}), 400
+    decrypted_img = decrypt_data(encrypted_data.encode())
 
-    img = IMG_PROCESSOR.apply_changes(img_bytes) # decrypted_data 
-
+    img = IMG_PROCESSOR.apply_changes(decrypted_img)
 
     ocr_res  =   OCR_ENGINE.ocr(img)[0]
     response = OCRDataProcessor( ocr_res, SPACY_NLP_MODEL, img.shape[0] / img.shape[1] ).apply_NER()

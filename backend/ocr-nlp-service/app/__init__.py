@@ -7,10 +7,9 @@ def create_app():
 
     app = Flask(__name__)
     app.config.from_prefixed_env()
+
     CORS(app)
 
     app.register_blueprint(ocr_bp, url_prefix="/ocr")
-
-
-
+    
     return app

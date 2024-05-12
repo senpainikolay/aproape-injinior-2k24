@@ -15,9 +15,107 @@ services:
         replicas: 2
 
     nginx:
-      container_name: nginx-load-balancer
-      build: nginx
+      container_name: nginx
+      build: nginx-load-balancer
       ports:
           - 8123:8123
       depends_on:
           - ocr_nlp_service
+
+    tg_service:
+      build: telegram-service
+      environment:
+        - OCR_HOST=nginx
+        - OCR_PORT=8123
+        - REDIS_HOST=redis-node-2
+        - REDIS_PORT=7001
+        - F_SECRET=Zrgt-X5lZmllFGLp7aEZiLSgBuMto64GUofPwJnVZDE=
+        - H_SECRET =WTF
+        - PORT=8080
+      ports:
+          - 8080:8080
+      depends_on:
+          - redis-cluster-creator
+          - nginx
+
+
+    redis-tg:
+      image: redis:7.2
+      container_name: redis_telegram
+      restart: always
+      ports:
+        - '6379:6379'
+      volumes: 
+        - redis_telegram:/data/redis 
+
+    redis-node-1:
+      image: redis:7.2
+      ports:
+        - 7000:7000
+      container_name: redis-node-1
+      volumes:
+        - ./telegram-service/redis:/redis
+      command: redis-server /redis/redis0.conf
+
+    redis-node-2:
+      image: redis:7.2
+      ports:
+        - 7001:7001
+      container_name: redis-node-2
+      volumes:
+        - ./telegram-service/redis:/redis
+      command: redis-server /redis/redis1.conf
+
+    redis-node-3:
+      image: redis:7.2
+      ports:
+        - 7002:7002
+      container_name: redis-node-3
+      volumes:
+        - ./telegram-service/redis:/redis
+      command: redis-server /redis/redis2.conf
+
+    redis-node-4:
+      image: redis:7.2
+      ports:
+        - 7003:7003
+      container_name: redis-node-4
+      volumes:
+        - ./telegram-service/redis:/redis
+      command: redis-server /redis/redis3.conf
+
+    redis-node-5:
+      image: redis:7.2
+      ports:
+        - 7004:7004
+      container_name: redis-node-5
+      volumes:
+        - ./telegram-service/redis:/redis
+      command: redis-server /redis/redis4.conf
+
+    redis-node-6:
+      image: redis:7.2
+      ports:
+        - 7005:7005
+      container_name: redis-node-6
+      volumes:
+        - ./telegram-service/redis:/redis
+      command: redis-server /redis/redis5.conf
+
+    redis-cluster-creator:
+      image: redis:7.2
+      ports:
+        - 7010:7010
+      command: redis-cli -p 7000 --cluster create redis-node-1:7000 redis-node-2:7001 redis-node-3:7002 redis-node-4:7003 redis-node-5:7004 redis-node-6:7005 --cluster-replicas 1 --cluster-yes
+      depends_on:
+        - redis-node-1
+        - redis-node-2
+        - redis-node-3
+        - redis-node-4
+        - redis-node-5
+        - redis-node-6
+
+
+volumes:
+    redis_telegram:
+      driver: local 
