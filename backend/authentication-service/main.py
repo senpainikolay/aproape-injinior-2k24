@@ -7,6 +7,7 @@ from auth import auth_bp
 from datetime import timedelta
 
 from flask_cors import CORS
+import os
 
 
 load_dotenv()
@@ -74,4 +75,4 @@ def create_app():
     return app 
 
 if __name__ == "__main__":
-    create_app().run(port=8002)
+    create_app().run(host="0.0.0.0", port=os.getenv("PORT"))

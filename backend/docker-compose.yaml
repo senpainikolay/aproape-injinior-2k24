@@ -5,7 +5,6 @@ services:
     ocr_nlp_service:
       build: ocr-nlp-service
       environment:
-      - FLASK_SECRET_KEY=RANDOMSTRING
       - FLASK_DEBUG=True
       - NLP_CORPUS_MODEL=ro_core_news_sm
       - PORT=8001
@@ -25,6 +24,7 @@ services:
     tg_service:
       build: telegram-service
       environment:
+        - FLASK_DEBUG=True
         - OCR_HOST=nginx
         - OCR_PORT=8123
         - REDIS_HOST=redis-node-2
@@ -33,10 +33,24 @@ services:
         - H_SECRET =WTF
         - PORT=8080
       ports:
-          - 8080:8080
+          - '8080:8080'
       depends_on:
           - redis-cluster-creator
           - nginx
+
+    auth_service:
+        build: authentication-service
+        environment:
+          - FLASK_DEBUG=True
+          - FLASK_SQLALCHEMY_DATABASE_URI=postgresql://user:password@postgres_auth:5432/test_db
+          - FLASK_SQLACHEMY_ECHO=True
+          - FLASK_JWT_SECRET_KEY=VERYMUCHSECRET
+          - PORT=8002
+        ports:
+            - '8002:8002'
+        depends_on:
+            - postgres
+
 
 
     redis-tg:
@@ -115,7 +129,29 @@ services:
         - redis-node-5
         - redis-node-6
 
+    postgres:
+      image: postgres:16.0
+      container_name: postgres_auth
+      ports:
+        - 5433:5432
+      volumes:
+        - postgres-db:/data/postgres
+      environment:
+        - POSTGRES_PASSWORD=password
+        - POSTGRES_USER=user
+        - POSTGRES_DB=test_db 
+    
+    pg-admin:
+      image: dpage/pgadmin4
+      container_name: pgadmin_auth
+      ports:
+        - 5050:80
+      environment:
+        - PGADMIN_DEFAULT_EMAIL=ok@gmail.com
+        - PGADMIN_DEFAULT_PASSWORD=password
 
 volumes:
     redis_telegram:
+      driver: local 
+    postgres-db:
       driver: local 

@@ -1,6 +1,10 @@
 from flask import Blueprint, jsonify, request
 from models import User, TokenBlocklist
+import pyotp
 from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required,get_jwt_identity,current_user,get_jwt
+import time
+
+
 auth_bp = Blueprint("auth", __name__)
 
 
@@ -49,8 +53,38 @@ def whoami():
     return jsonify(
         {
             "name": current_user.name,
+            "id": current_user.id,
         }
     )
+
+
+@auth_bp.post("/generate_otp")
+@jwt_required()
+def generate_and_return_otp():
+    data = request.get_json()
+    current_user.generate_otp(data.get("tg_usrname"))
+    current_user.save()
+    return jsonify({"otp": current_user.otp_secret})
+
+
+@auth_bp.post("/validate_otp")
+def validate_otp():
+    data = request.get_json()
+
+    otp = data.get("otp")
+    tg = data.get("tg_usrname")
+
+    user = User.get_user_by_tg(tg_name=tg)
+
+    if user is None:
+        return jsonify({"error": "Telegram Username not registered."}), 405
+
+    if  user.validate_otp(tg,otp):
+        return jsonify({"message": "Valid OTP"}), 200
+    else:
+        return jsonify({"message": "Invalid or Expired OTP"}), 400
+
+
 
 
 @auth_bp.get("/refresh")
@@ -75,4 +109,6 @@ def logout_user():
 
     token_b.save()
 
-    return jsonify({"message": f"{token_type} token revoked successfully"}) , 200
+    return jsonify({"message": f"{token_type} token revoked successfully"}) , 200 
+
+

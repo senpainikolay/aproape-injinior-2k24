@@ -2,7 +2,8 @@
 from extensions import db
 from uuid import uuid4
 from werkzeug.security import generate_password_hash,check_password_hash
-from datetime import datetime
+from datetime import datetime,timedelta
+import pyotp
 
 
 
@@ -12,6 +13,9 @@ class User(db.Model):
     id = db.Column(db.String(), primary_key=True, default= lambda: str(uuid4()))
     name = db.Column(db.String(), nullable=False)
     email = db.Column(db.String(), nullable=False, unique=True)
+    tg_name = db.Column(db.String(), nullable=True, unique=True)
+    otp_secret = db.Column(db.String(), nullable=True)
+    otp_expiration = db.Column(db.DateTime, nullable=True)
     password = db.Column(db.Text())
 
     
@@ -21,12 +25,26 @@ class User(db.Model):
     def set_password(self, password):
         self.password = generate_password_hash(password)
 
+    def generate_otp(self,tg_usr):
+        self.otp_secret = pyotp.random_base32()
+        self.tg_name = tg_usr
+        self.otp_expiration = datetime.now() + timedelta(minutes=3)  # OTP expiration time: 3 minutes
+
+
+    def validate_otp(self, tg_name, token):
+        return self.otp_secret == token and datetime.now() < self.otp_expiration and tg_name == self.tg_name
+
+
     def check_password(self, password):
         return check_password_hash(self.password, password)
 
     @classmethod
     def get_user_by_email(cls, email):
         return cls.query.filter_by(email=email).first()
+    
+    @classmethod
+    def get_user_by_tg(cls, tg_name):
+        return cls.query.filter_by(tg_name=tg_name).first()
 
     def save(self):
         db.session.add(self)
