@@ -1,25 +1,15 @@
 import { Transaction } from "../models/Transaction";
 import { Account,AccountPost } from "../models/Account";
 import { PaginationResponse} from "../models/PaginationResponse";
-import axios from "axios";
 
 import  AuthorizedApi from "./AuthorizedApi"; 
-
-
-
-const USER_ID = "f0722015-f1d6-4029-8e5e-9e0b7cf8910b"; 
-
-const url_EX = "http://localhost:8000" 
-
-
-
 
 export class AccountService extends AuthorizedApi {
 
   public getAll = async (): Promise<Account[]> => {
-    // let instance = await this.getInstance();
-    return axios
-      .get( url_EX + `/users/` + USER_ID + `/accounts/` )
+    let instance = await this.getInstance();
+    return instance
+      .get(`/user/accounts` )
       .then((response) => {
         return response.data as Account[];
       })
@@ -30,33 +20,35 @@ export class AccountService extends AuthorizedApi {
   };
 
   public getById = async ( accountId: string ): Promise<Account> => { 
-    //let instance = await this.getInstance();
+    let instance = await this.getInstance();
 
-    return axios.get( url_EX + `/users/` + USER_ID + `/accounts/` + accountId )
+    return instance.get( `/user/account/` + accountId )
     .then(response => response.data as Account )
     .catch(error => Promise.reject(error) );
   };
 
   async addAccount(account: AccountPost): Promise<void> {
-    //let instance = await this.getInstance();
-    return axios.post(url_EX + `/users/` + USER_ID + `/accounts/`, account);
+    let instance = await this.getInstance();
+    return instance.post(`/user/accounts`, account);
   }
 
   public getTransactions = async (
     accountId: string,
-    pageNumber = 1,
-    pageSize = 20,
-  ): Promise<PaginationResponse<Transaction>> => {
+    pageNumber: number,
+    pageSize: number,
+  ): Promise<PaginationResponse<Transaction>> => { 
 
-    const res =  await this.getById(accountId)
+    let instance = await this.getInstance();
 
+    return instance.get( `/user/account/` + accountId + "/transactions" + "?page=" +  String(pageNumber) +  "&limit=" + String(pageSize)  )
+    .then(response => {
 
 
     const startIndex = (pageNumber - 1) * pageSize;
     const endIndex = startIndex + pageSize;
-    const paginatedTransactions =  res.transactions.slice(startIndex, endIndex);
+    const paginatedTransactions =  response.data["transactions"]
 
-    const totalCount = res.transactions.length;
+    const totalCount = response.data["transaction_count"]
     const totalPages = Math.ceil(totalCount / pageSize);
     const hasPreviousPage = pageNumber > 1;
     const hasNextPage = endIndex < totalCount;
@@ -70,6 +62,11 @@ export class AccountService extends AuthorizedApi {
       hasPreviousPage,
       hasNextPage,
     };
+
+
+
+    })
+    .catch(error => Promise.reject(error) );
 
   };
 //   public async getTotalBudget(): Promise<TotalBudgetFromWallets> {

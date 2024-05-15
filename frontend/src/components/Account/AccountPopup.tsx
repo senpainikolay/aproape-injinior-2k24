@@ -3,16 +3,21 @@ import {
   TextField,
   Typography,
   Modal,
+  Autocomplete,
+  Popper
 } from "@mui/material";
 import { showSuccessMessage, showErrorMessage } from "../../utils/toast";
 import { AccountPost } from "../../models/Account";
 import { onSubmitFunc } from "./AccountsComponent";
 import { Field, Formik, FormikHelpers } from "formik";
 import {useTranslation} from "react-i18next";
+import { Currency } from "../../models/Account";
+
 
 export interface AddAccountPopupProps {
   title: string;
   successMessage: string;
+  currencies: Currency[];
   isUniqueAccountName: (name: string) => boolean;
   onSave: onSubmitFunc;
   isOpen: boolean;
@@ -20,10 +25,13 @@ export interface AddAccountPopupProps {
   accountToUpdate?: AccountPost;
 }
 
+
+
 export const AccountPopUp = (props: AddAccountPopupProps) => {
   const {t} = useTranslation();
   const initialAccountName = "";
   const initialBalance = 10;
+  const initialCurrencyID = "";
 
   const handleClose = () => {
     props.onClose();
@@ -37,7 +45,7 @@ export const AccountPopUp = (props: AddAccountPopupProps) => {
       name: values.name,
       initial_balance: 10,
       created_on: new Date().toISOString(),
-      currency_id: "c61f8118-98f7-4d89-815c-4afa68e82dff"
+      currency_id: values.currency_id
 
     };
     props
@@ -48,6 +56,7 @@ export const AccountPopUp = (props: AddAccountPopupProps) => {
         props.onClose();
         values.name = "";
         values.initial_balance = 10;
+        values.currency_id = "";
       })
       .catch(() => {
         showErrorMessage();
@@ -75,8 +84,8 @@ export const AccountPopUp = (props: AddAccountPopupProps) => {
       initialValues={{
         name: initialAccountName,
         initial_balance: initialBalance,
-      created_on: new Date().toISOString(),
-      currency_id: "c61f8118-98f7-4d89-815c-4afa68e82dff"
+        currency_id: initialCurrencyID,
+        created_on: new Date().toISOString(),
             }}
       onSubmit={submitCallback}
       validate={validateCallback}
@@ -118,13 +127,44 @@ export const AccountPopUp = (props: AddAccountPopupProps) => {
                   error={!!formik.errors.initial_balance}
                   FormHelperTextProps={{ style: { marginLeft: 0 } }}
                 />
+
+                 <Autocomplete
+                    id="currency_id"
+                    options={props.currencies}
+                    getOptionLabel={(option: Currency) => option.code}
+                    style={styles.errorFieldInput} 
+                   
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label={t("initial_currency_code")}
+                        variant="outlined"
+                        fullWidth
+                        name="currency_id"
+                        value={formik.values.currency_id}
+                        onBlur={formik.handleBlur}
+                        helperText={formik.touched.currency_id && formik.errors.currency_id ? formik.errors.currency_id : ""}
+                        error={formik.touched.currency_id && Boolean(formik.errors.currency_id)}
+                      />
+                    )}
+                    onChange={(event, newValue: Currency | null) => {
+                      formik.setFieldValue('currency_id', newValue ? newValue.id : '');
+                    }}
+                    
+
+                    PopperComponent={(props) => (
+                      <Popper {...props} anchorEl={document.getElementById('currency_id')} placement="bottom-start" />
+                    )}
+                   
+                    />
+
                 <div style={styles.buttons}>
                   <Button onClick={handleClose}>{t('cancel')}</Button>
                   <Button
                     variant="contained"
                     color="primary"
                     type="submit"
-                    disabled={!formik.dirty || !formik.isValid || formik.isSubmitting}
+                    disabled={!formik.dirty || !formik.isValid || formik.isSubmitting || formik.values.currency_id == ""}
                   >
                     {t('save')}
                   </Button>
@@ -139,14 +179,11 @@ export const AccountPopUp = (props: AddAccountPopupProps) => {
 };
 
 const styles: { [key: string]: any } = {
+  
+
   errorFieldInput: {
     marginTop: "10px",
-    "&.Mui-error .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-      borderColor: "red",
-    },
-    "&.Mui-error .MuiOutlinedInput-root .MuiOutlinedInput-input": {
-      color: "red",
-    },
+    
   },
   addButton: {
     display: "flex",

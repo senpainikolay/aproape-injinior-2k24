@@ -1,6 +1,6 @@
 
 from extensions import db
-from uuid import uuid4
+from sqlalchemy import ForeignKey
 from werkzeug.security import generate_password_hash,check_password_hash
 from datetime import datetime,timedelta
 import pyotp
@@ -8,9 +8,10 @@ import pyotp
 
 
 
+
 class User(db.Model):
-    __tablename__ = "users"
-    id = db.Column(db.String(), primary_key=True, default= lambda: str(uuid4()))
+    __tablename__ = "user_auth"
+    id = db.Column(db.String(), primary_key=True)
     name = db.Column(db.String(), nullable=False)
     email = db.Column(db.String(), nullable=False, unique=True)
     tg_name = db.Column(db.String(), nullable=True, unique=True)

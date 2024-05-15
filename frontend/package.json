@@ -18,8 +18,11 @@
     "axios": "^1.6.8",
     "chart.js": "^3.9.1",
     "chartjs-adapter-date-fns": "^3.0.0",
+    "crypto-js": "^4.2.0",
     "date-fns": "^3.6.0",
     "dayjs": "^1.11.10",
+    "dotenv": "^16.4.5",
+    "fernet": "^0.3.2",
     "file-saver": "^2.0.5",
     "formik": "^2.4.5",
     "i18next": "^23.11.2",
@@ -62,6 +65,7 @@
     ]
   },
   "devDependencies": {
+    "@types/fernet": "^0.4.3",
     "@types/file-saver": "^2.0.7"
   }
 }

@@ -3,7 +3,7 @@ import {
   LoginReq,
   LoginResponse,
   RegisterReq,
-  GetNameResponse,
+  GetUsrInfoResponse,
 } from "../models/User";
 import AuthorizedApi, { AUTH_ACCESS_TOKEN, AUTH_REFRESH_TOKEN } from "./AuthorizedApi"; 
 
@@ -14,12 +14,12 @@ import {BASE_URL} from './baseApi'
 
 export class UserService extends AuthorizedApi {
 
-  public get = async (): Promise<GetNameResponse> => {
+  public get = async (): Promise<GetUsrInfoResponse> => {
     let instance = await this.getInstance();
     return instance
-      .get(`auth/me`)
+      .get(`/auth/me`)
       .then((response) => {
-        return response.data as GetNameResponse;
+        return response.data as GetUsrInfoResponse;
       })
       .catch((error) => {
         console.error(error);
@@ -30,14 +30,14 @@ export class UserService extends AuthorizedApi {
 
   public register = async  (user: RegisterReq) : Promise<void> => {
     return axios
-    .post(BASE_URL + "auth/register", user)
+    .post(BASE_URL + "/auth/register", user)
   }
 
 
   public login = async (loginRequest: LoginReq): Promise<void> => {
    
     return axios
-      .post( BASE_URL +  "auth/login", loginRequest)
+      .post( BASE_URL +  "/auth/login", loginRequest)
       .then( response => {
         const d = response.data as LoginResponse
         window.localStorage.setItem(AUTH_ACCESS_TOKEN, d.tokens.access);

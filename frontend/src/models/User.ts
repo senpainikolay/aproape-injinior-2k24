@@ -33,7 +33,8 @@ export interface LoginResponse {
     password: string;
 }
   
-  export interface GetNameResponse {
+  export interface GetUsrInfoResponse {
+    id: string;
     name: string;
   }
   

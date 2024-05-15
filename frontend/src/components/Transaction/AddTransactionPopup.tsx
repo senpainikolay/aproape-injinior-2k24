@@ -9,6 +9,7 @@ import { AddTransactionRequest, TransactionType } from "../../models/Transaction
 import utc from "dayjs/plugin/utc";
 import {useTranslation} from "react-i18next";
 import { showErrorMessage } from "../../utils/toast";
+import { OcrService } from "../../services/OcrService";
 
 export interface AddTransactionPopupProps {
     accountId: string | undefined;
@@ -30,6 +31,8 @@ interface AddTransactionFormValues {
 }
 
 const transactionService = new TransactionService();
+const ocrService = new OcrService();
+
 
 export const AddTransactionPopup = (props: AddTransactionPopupProps) => {
     const {t} = useTranslation();
@@ -86,7 +89,7 @@ export const AddTransactionPopup = (props: AddTransactionPopupProps) => {
         formik.setFieldValue("image", file);
         setProcessingImage(true);
 
-        transactionService.processImageInput(file).then((res) => 
+        ocrService.processImageInput(file).then((res) => 
             {
             formik.setValues({
                 transactionType: TransactionType.Expense,

@@ -19,7 +19,7 @@ def register():
     auth_service_url = f"{AUTH_BASE}/auth/register"
     response = requests.post(auth_service_url, data=request.data, headers=request.headers)    
     
-    return response.json(), response.status_code
+    return response.text, response.status_code
     
 
 

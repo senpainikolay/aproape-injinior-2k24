@@ -71,5 +71,6 @@
   "export_transaction_data": "Export Transaction Data",
   "select_file_type": "Select the file format for exporting transaction data:",
   "file_format": "File format",
-  "export": "Export"
+  "export": "Export", 
+  "initial_currency_code" : "Currency"
 }

@@ -25,7 +25,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import WalletIcon from '@mui/icons-material/Wallet';
 import { useTranslation } from "react-i18next";
 
-import { GetNameResponse } from "../models/User";
+import { GetUsrInfoResponse } from "../models/User";
 import { UserService } from "../services/UserService";
 
 
@@ -38,7 +38,7 @@ const ResponsiveAppBar = () => {
   const navigate = useNavigate();
   const { auth, setAuth } = useAuth();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userDetails, setUserDetails] = useState({} as GetNameResponse);
+  const [userDetails, setUserDetails] = useState({} as GetUsrInfoResponse);
   const [openLanguages, setOpenLanguages] = useState(false);
 
 
@@ -47,7 +47,7 @@ const ResponsiveAppBar = () => {
       setIsLoggedIn(true);
 
       userService.get()
-        .then((response: GetNameResponse) => {
+        .then((response: GetUsrInfoResponse) => {
           setUserDetails(response)})
         
     }

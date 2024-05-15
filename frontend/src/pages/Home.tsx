@@ -18,17 +18,17 @@ export const Home = () => {
 
     const [transactions, setTransactions] = useState<TransactionBalanceTimeSeries[]>([]);
 
-    const fetchTransactionsData = async () => {
-        const transactionService = new TransactionService();
-        const response = await transactionService.getTransactionsTimeSeriesPerAccount();
-        setTransactions(response);
-    };
+    // const fetchTransactionsData = async () => {
+    //     const transactionService = new TransactionService();
+    //     const response = await transactionService.getTransactionsTimeSeriesPerAccount();
+    //     setTransactions(response);
+    // };
    
    
 
     useEffect(() => {
       
-            fetchTransactionsData();
+           // fetchTransactionsData();
     
     }, []);
 

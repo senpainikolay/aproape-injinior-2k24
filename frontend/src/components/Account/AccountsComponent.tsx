@@ -19,11 +19,16 @@ import {AccountPopUp} from "./AccountPopup";
 import {useNavigate} from "react-router-dom";
 import Grid from '@mui/material/Grid';
 import {useTranslation} from "react-i18next";
+import { Currency } from "../../models/Account";
+
 
 export type onSubmitFunc = (account: AccountPost) => Promise<void>
 
+
+
 interface IAccountsComponentProps {
     accounts: Account[];
+    currencies: Currency[];
     loading: boolean;
     isUniqueAccountName: (name: string) => boolean;
     onAccountAdded: onSubmitFunc;
@@ -117,6 +122,7 @@ export default function AccountsComponent(
                                 onClose={() => setOpenPopupCreate(false)}
                                 isUniqueAccountName={props.isUniqueAccountName}
                                 onSave={props.onAccountAdded}
+                                currencies={props.currencies}
                             />
                         </List>
                     )}

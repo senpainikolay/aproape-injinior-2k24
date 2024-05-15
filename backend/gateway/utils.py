@@ -17,6 +17,15 @@ def verify_token(token):
         return True
     else:
         return False
+    
+def get_usr_info(token):
+    auth_service_url = f"{AUTH_BASE}/auth/me"
+    headers = {'Authorization': token}
+    response = requests.get(auth_service_url, headers=headers)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        return None
 
 def token_required_dec(f):
     @wraps(f)

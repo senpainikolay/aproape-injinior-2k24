@@ -1,5 +1,5 @@
 
-from flask import Blueprint, request, redirect
+from flask import Blueprint, request
 from utils import token_required_dec
 import requests
 import os

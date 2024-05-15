@@ -18,7 +18,7 @@ export interface AccountPost {
     currency_id: string;
 };
 
-interface Currency { 
+export interface Currency { 
     id: string;
     code: string;
     name: string; 

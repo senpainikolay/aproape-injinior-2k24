@@ -18,3 +18,4 @@ SQLAlchemy==2.0.29
 typing-extensions==4.11.0
 werkzeug==3.0.2
 zipp==3.18.1
+requests==2.31.0

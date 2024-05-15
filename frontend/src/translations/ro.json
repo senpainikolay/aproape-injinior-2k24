@@ -74,6 +74,7 @@
   "go_to_homepage": "Mergi la pagina de pornire acum",
   "show_months": {
   "beginning": "Arată",
-  "end": "Luni"
+  "end": "Luni",
+  "initial_currency_code" : "Valuta"
   }
   }

@@ -1,18 +1,27 @@
 import { useState, useEffect } from "react";
 import { AccountService } from "../services/AccountService";
 import AccountsComponent from "../components/Account/AccountsComponent";
-import { Account, AccountPost } from "../models/Account";
+import { Account, AccountPost, Currency } from "../models/Account";
+import { TransactionService } from "../services/TransactionService";
 
 export const Accounts = ()  => {
     const accountService = new AccountService();
+    const transactionService = new TransactionService();
     const [accounts, setAccounts] = useState<Account[]>([]);
+    const [currencies, setCurrencies] = useState<Currency[]>([]);
     const [loading, setLoading] = useState(true);
 
     const fetchData = async () => {
         const response = await accountService.getAll();
+        const response2 = await transactionService.getCurrencies();
         setAccounts(response);
+        setCurrencies(response2);
         setLoading(false);
+
+
     };
+
+
 
     useEffect(() => {
         fetchData();
@@ -43,6 +52,7 @@ export const Accounts = ()  => {
         <div>
             <AccountsComponent
                 accounts={accounts}
+                currencies={currencies}
                 loading={loading}
                 isUniqueAccountName={handleIsUniqueAccountName}
                 onAccountAdded={handleAccountAdded}

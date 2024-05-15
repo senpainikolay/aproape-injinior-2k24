@@ -2,10 +2,19 @@ from flask import Blueprint, jsonify, request
 from models import User, TokenBlocklist
 import pyotp
 from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required,get_jwt_identity,current_user,get_jwt
-import time
+import requests
+
+import json
+
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
 
 auth_bp = Blueprint("auth", __name__)
+
+TR_BASE = os.environ.get("TR_BASE")
+
 
 
 @auth_bp.post("/register")
@@ -16,12 +25,18 @@ def register_user():
 
     if user is not None:
         return jsonify({"error": "User already exists"}), 409
+    
+    kek = requests.post(f"{TR_BASE}/users/", data= json.dumps({"first_name": data.get("name") ,"last_name": ""}), headers=request.headers)
 
-    new_user = User(email=data.get("email"),name=data.get("name") )
-    new_user.set_password(password=data.get("password"))
-    new_user.save()
+    if kek.status_code == 200:
+        new_user = User(id = kek.json().get('id'), email=data.get("email"),name=data.get("name") )
+        new_user.set_password(password=data.get("password"))
+        new_user.save()
 
-    return jsonify({"message": "User created"}), 201
+        return jsonify({"message": "User created"}), 201
+    else:
+        return jsonify({"message": "smth wrong with registering on auth service"}), 500
+
 
 
 @auth_bp.post("/login")

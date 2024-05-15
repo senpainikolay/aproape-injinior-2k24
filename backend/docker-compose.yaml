@@ -12,6 +12,8 @@ services:
       - H_SECRET=WTF
       deploy:
         replicas: 2
+      networks:
+          - bachelorthesis2024_default
 
     nginx:
       container_name: nginx
@@ -20,9 +22,12 @@ services:
           - 8123:8123
       depends_on:
           - ocr_nlp_service
+      networks:
+          - bachelorthesis2024_default
 
     tg_service:
       build: telegram-service
+      container_name: tg_service
       environment:
         - FLASK_DEBUG=True
         - OCR_HOST=nginx
@@ -37,30 +42,37 @@ services:
       depends_on:
           - redis-cluster-creator
           - nginx
+      networks:
+          - bachelorthesis2024_default
 
     auth_service:
         build: authentication-service
+        container_name: auth_service
         environment:
           - FLASK_DEBUG=True
-          - FLASK_SQLALCHEMY_DATABASE_URI=postgresql://user:password@postgres_auth:5432/test_db
+          - FLASK_SQLALCHEMY_DATABASE_URI=postgresql://root:toor@db:5432/transaction_db
           - FLASK_SQLACHEMY_ECHO=True
           - FLASK_JWT_SECRET_KEY=VERYMUCHSECRET
           - PORT=8002
+          - TR_BASE=http://transaction:8000
         ports:
             - '8002:8002'
-        depends_on:
-            - postgres
+        networks:
+          - bachelorthesis2024_default
 
-
-
-    redis-tg:
-      image: redis:7.2
-      container_name: redis_telegram
-      restart: always
+    gateway:
+      build: gateway
+      environment:
+        - AUTH_BASE=http://auth_service:8002
+        - OCR_BASE=http://nginx:8123
+        - TG_BASE=http://tg_service:8080
+        - T_BASE=http://transaction:8000
+        - PORT=8069
       ports:
-        - '6379:6379'
-      volumes: 
-        - redis_telegram:/data/redis 
+          - '8069:8069'
+      networks:
+          - bachelorthesis2024_default
+
 
     redis-node-1:
       image: redis:7.2
@@ -70,6 +82,8 @@ services:
       volumes:
         - ./telegram-service/redis:/redis
       command: redis-server /redis/redis0.conf
+      networks:
+          - bachelorthesis2024_default
 
     redis-node-2:
       image: redis:7.2
@@ -79,6 +93,8 @@ services:
       volumes:
         - ./telegram-service/redis:/redis
       command: redis-server /redis/redis1.conf
+      networks:
+          - bachelorthesis2024_default
 
     redis-node-3:
       image: redis:7.2
@@ -88,6 +104,8 @@ services:
       volumes:
         - ./telegram-service/redis:/redis
       command: redis-server /redis/redis2.conf
+      networks:
+          - bachelorthesis2024_default
 
     redis-node-4:
       image: redis:7.2
@@ -97,6 +115,8 @@ services:
       volumes:
         - ./telegram-service/redis:/redis
       command: redis-server /redis/redis3.conf
+      networks:
+          - bachelorthesis2024_default
 
     redis-node-5:
       image: redis:7.2
@@ -106,6 +126,8 @@ services:
       volumes:
         - ./telegram-service/redis:/redis
       command: redis-server /redis/redis4.conf
+      networks:
+          - bachelorthesis2024_default
 
     redis-node-6:
       image: redis:7.2
@@ -115,12 +137,16 @@ services:
       volumes:
         - ./telegram-service/redis:/redis
       command: redis-server /redis/redis5.conf
+      networks:
+          - bachelorthesis2024_default
 
     redis-cluster-creator:
       image: redis:7.2
       ports:
         - 7010:7010
       command: redis-cli -p 7000 --cluster create redis-node-1:7000 redis-node-2:7001 redis-node-3:7002 redis-node-4:7003 redis-node-5:7004 redis-node-6:7005 --cluster-replicas 1 --cluster-yes
+      networks:
+          - bachelorthesis2024_default
       depends_on:
         - redis-node-1
         - redis-node-2
@@ -129,29 +155,6 @@ services:
         - redis-node-5
         - redis-node-6
 
-    postgres:
-      image: postgres:16.0
-      container_name: postgres_auth
-      ports:
-        - 5433:5432
-      volumes:
-        - postgres-db:/data/postgres
-      environment:
-        - POSTGRES_PASSWORD=password
-        - POSTGRES_USER=user
-        - POSTGRES_DB=test_db 
-    
-    pg-admin:
-      image: dpage/pgadmin4
-      container_name: pgadmin_auth
-      ports:
-        - 5050:80
-      environment:
-        - PGADMIN_DEFAULT_EMAIL=ok@gmail.com
-        - PGADMIN_DEFAULT_PASSWORD=password
-
-volumes:
-    redis_telegram:
-      driver: local 
-    postgres-db:
-      driver: local 
+networks:
+  bachelorthesis2024_default:
+    external: true
