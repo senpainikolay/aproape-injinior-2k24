@@ -37,6 +37,8 @@ services:
         - F_SECRET=Zrgt-X5lZmllFGLp7aEZiLSgBuMto64GUofPwJnVZDE=
         - H_SECRET =WTF
         - PORT=8080
+        - AUTH_API=http://auth_service:8002
+        - TR_API=http://transaction:8000
       ports:
           - '8080:8080'
       depends_on:

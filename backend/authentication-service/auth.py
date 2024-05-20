@@ -62,6 +62,20 @@ def login_user():
     return jsonify({"error": "Invalid username or password"}), 400
 
 
+
+@auth_bp.post("/getbytg")
+def get_by_tg():
+    data = request.get_json()
+
+    user = User.get_user_by_tg(tg_name=data.get("tg_usrname"))
+
+    if user is None:
+        return jsonify({"message": "user not found"}), 404
+    
+    return jsonify({"id": user.id }), 200
+
+
+
 @auth_bp.get("/me")
 @jwt_required()
 def whoami():
@@ -92,7 +106,7 @@ def validate_otp():
     user = User.get_user_by_tg(tg_name=tg)
 
     if user is None:
-        return jsonify({"error": "Telegram Username not registered."}), 405
+        return jsonify({"message": "Telegram Username not linked."}), 405
 
     if  user.validate_otp(tg,otp):
         return jsonify({"message": "Valid OTP"}), 200

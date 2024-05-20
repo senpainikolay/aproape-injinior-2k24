@@ -1,5 +1,5 @@
 
-
+from datetime import datetime
 class ImageInformationEntity:
     def __init__(self, entity, total, payment_method,date,address,modify_state=""):
         self.entity  = entity
@@ -47,6 +47,17 @@ class ImageInformationEntity:
             'date' : self.date,
             'address' : self.address,
             'modify_state' : self.modify_state
+
+        }
+    
+    def to_transaction_entity(self):
+        return {
+            "amount": self.total,
+            "datetime": datetime.now(),
+            "payee": self.entity,
+            "description": "",
+            "location": self.address,
+            "transaction_type_id": "fd9bf026-338a-4372-bd48-8509a47e877c"
 
         }
     
