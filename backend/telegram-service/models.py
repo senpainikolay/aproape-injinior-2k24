@@ -1,6 +1,8 @@
 
 from datetime import datetime
-class ImageInformationEntity:
+
+
+class ImageExtractedDataStateManager:
     def __init__(self, entity, total, payment_method,date,address,modify_state=""):
         self.entity  = entity
         self.total = total
@@ -57,14 +59,11 @@ class ImageInformationEntity:
             "payee": self.entity,
             "description": "",
             "location": self.address,
-            "transaction_type_id": "fd9bf026-338a-4372-bd48-8509a47e877c"
-
+            "transaction_type_id": "fd9bf026-338a-4372-bd48-8509a47e877c" 
         }
     
     def to_user_ui(self):
         return f'Entity: {self.entity}\nTotal: {self.total}\nPayment Method: {self.payment_method}\nDate: {self.date}\nAddress: {self.address}'
-
-        
 
     @classmethod
     def from_api_dict(cls, data):

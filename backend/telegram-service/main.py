@@ -9,7 +9,7 @@ import os
 import json
 
 from informative_exception import InformativeException
-from models import ImageInformationEntity
+from models import ImageExtractedDataStateManager
 
 from redis.cluster import RedisCluster
 import redis
@@ -66,7 +66,7 @@ async def telegram_webhook(request: Request, message: TelegramMessage):
             # If the user has cached some OCR processed data
             if user_img_info:
                 json_unmarshelled = json.loads(user_img_info)
-                img_data =  ImageInformationEntity.from_redis_dict(json_unmarshelled)
+                img_data =  ImageExtractedDataStateManager.from_redis_dict(json_unmarshelled)
                 # if the user is using the dialog options
                 if 'text' in message_data:
                     txt = message_data['text']
@@ -76,8 +76,8 @@ async def telegram_webhook(request: Request, message: TelegramMessage):
                         raise InformativeException(f"Write the data for the {img_data.modify_state}:")
                     elif txt == "Confirm":
                         Redis_Client.set(usr,"")
-
-                        if add_transaction_succesful(usr,img_data.to_transaction_entity()):
+                        acc = proccss_account_options()
+                        if add_transaction_succesful(usr,img_data.to_transaction_entity(),acc):
                             raise InformativeException(f"Transaction saved.")
                         
                         raise InformativeException(f"Something Wrong with processing the transaction")
@@ -112,7 +112,7 @@ async def telegram_webhook(request: Request, message: TelegramMessage):
                 if image_data is None:
                    raise InformativeException("Send us a check to process!")
                 else:
-                    img_data_entity = ImageInformationEntity.from_api_dict(image_data)
+                    img_data_entity = ImageExtractedDataStateManager.from_api_dict(image_data)
                     json_data = json.dumps(img_data_entity.to_dict())
                     Redis_Client.set(usr,json_data)
                     send_message(chat_id,"Check processed!")
@@ -162,13 +162,13 @@ def check_code_req(code,usr):
     
 
 
-def add_transaction_succesful(usr,transaction): 
+def add_transaction_succesful(usr,transaction,acc): 
     data = {  "tg_usrname": usr}
     response = requests.post(AUTH_API + "/getbytg", json=data)
 
     if response.status_code == 200:
         usr_id = response.json().get('id')
-        tr_service_url =  TR_API + f"/users/{usr_id}/accounts/"
+        tr_service_url =  TR_API + f"/users/{usr_id}/accounts/{acc}"
         res = requests.post(tr_service_url, json=transaction)
         if res.status_code == 200:
             return True
