@@ -1,12 +1,7 @@
 import { Container, Typography } from "@mui/material";
 import { AccountsCarousel } from "../components/Account/AccountsCarousel";
 import {useTranslation} from "react-i18next";
-import TabsComponent from "../components/TabsComponent";
 
-import {TransactionBalanceTimeSeries} from "../models/Transaction"
-import { useEffect, useState } from "react";
-
-import {TransactionService} from "../services/TransactionService"
 
 
 
@@ -16,29 +11,12 @@ import {TransactionService} from "../services/TransactionService"
 export const Home = () => {
     const {t} = useTranslation();
 
-    const [transactions, setTransactions] = useState<TransactionBalanceTimeSeries[]>([]);
-
-    // const fetchTransactionsData = async () => {
-    //     const transactionService = new TransactionService();
-    //     const response = await transactionService.getTransactionsTimeSeriesPerAccount();
-    //     setTransactions(response);
-    // };
-   
-   
-
-    useEffect(() => {
-      
-           // fetchTransactionsData();
-    
-    }, []);
-
     return (
-        <Container maxWidth="lg" sx={{ marginTop: "3rem", marginBottom: "3rem"  }}>
-            <Typography align="center" variant="h3" component="div" sx={styles.dashboardTitle}>
-                {t('dashboard')}
+        <Container maxWidth="lg" sx={{ marginTop: "10rem", marginBottom: "3rem"  }}>
+            <Typography align="center" variant="h2" component="div" sx={styles.dashboardTitle}>
+                Select an account
             </Typography>
             <AccountsCarousel ></AccountsCarousel>
-            <TabsComponent transactions={transactions} ></TabsComponent>
         </Container>
 
     );

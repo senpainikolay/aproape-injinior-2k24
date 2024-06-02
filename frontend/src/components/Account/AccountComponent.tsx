@@ -50,13 +50,13 @@ export const AccountComponent = (props: IAccountComponentProps) => {
 
 
 
-
     const fetchTransactions = () => {
         if (props.accountId == "") {
             return;
         }
         setDataIsLoading(true);
-        accountService.getTransactions(props.accountId, page + 1, rowsPerPage)
+        console.log(   page,rowsPerPage);
+        accountService.getTransactions(props.accountId, page, rowsPerPage)
             .then(value => {
                 setPage(Math.max(0, Math.min(page, value.totalPages - 1)));
                 setTransactionPage(value);
@@ -90,6 +90,8 @@ export const AccountComponent = (props: IAccountComponentProps) => {
             setIsExportTransactionsPopupOpen(false);
         },
     };
+
+
     useEffect(() => {
         fetchTransactions();
     }, [page, rowsPerPage, props.accountId]);
@@ -106,7 +108,7 @@ export const AccountComponent = (props: IAccountComponentProps) => {
                 (props.account !== undefined
                         ?
                         <>
-                            <Typography variant="h4">{props.account.name}</Typography>
+                             <Typography variant="h4">{props.account.name}</Typography>
                             <Button sx={styles.exportButton} variant="contained"
                                     onClick={() => setIsExportTransactionsPopupOpen(true)}>{t('export_data')}</Button>
                             <ExportTransactionsPopup {...exportTransactionsPopupProps} />
@@ -135,7 +137,7 @@ export const AccountComponent = (props: IAccountComponentProps) => {
                                             {transactionPage?.data.map((row, index) => (
                                                 <TableRow key={index}>
                                                     <TableCell>{dayjs(row.datetime).format("YYYY-MM-DD")}</TableCell>
-                                                    <TableCell>{row.transaction_type.name}</TableCell>
+                                                    <TableCell>{ row.transaction_type_id === "4a047173-0729-485f-9608-9a99dfb1c8a3" ? "Income" : "Expense"}</TableCell>
                                                     <TableCell>{row.payee}</TableCell>
                                                     <TableCell>{row.amount}</TableCell>
                                                 </TableRow>

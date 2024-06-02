@@ -5,7 +5,10 @@ import Box from "@mui/material/Box";
 import AppBar from "@mui/material/AppBar";
 
 import  SpendingLineChart  from "./Charts/SpendingChart";
-import { TransactionBalanceTimeSeries } from "../models/Transaction";
+import  BarChart  from "./Charts/BarChart";
+import PieChart from "./Charts/PieChart";
+
+import { TransactionTimeSeries} from "../models/Transaction";
 
 import {useTranslation} from "react-i18next";
 import {Container} from "@mui/material";
@@ -13,7 +16,12 @@ import {useTheme} from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
 interface ITabsProps {
-    transactions: TransactionBalanceTimeSeries[],
+    balance_transactions: TransactionTimeSeries[],
+    predicted_balance_transactions: TransactionTimeSeries[],
+    income_transactions: TransactionTimeSeries[],
+    predicted_income_transactions: TransactionTimeSeries[],
+    spending_transactions: TransactionTimeSeries[],
+    predicted_spending_transactions: TransactionTimeSeries[]
 
 }
 
@@ -38,7 +46,7 @@ const TabsComponent = (props: ITabsProps) => {
     };
 
     return (
-        <Container maxWidth="lg"    >
+        <Container maxWidth="lg"   sx={{marginTop: "10em"}}    >
             <AppBar position="static">
                 <Tabs
                     value={value}
@@ -49,14 +57,21 @@ const TabsComponent = (props: ITabsProps) => {
                     aria-label="full width tabs example"
                 >
                     <Tab
-                        label={t('recent_transactions')}
+                        label={t('balance_tab_name')}
                         sx={{
                             ...styles.tabLabel,
                             fontSize: `${getFontSize()}px`,
                         }}
                     />
                     <Tab
-                        label={t('spending_trends_analysis')}
+                        label={t('spending_tab_name')}
+                        sx={{
+                            ...styles.tabLabel,
+                            fontSize: `${getFontSize()}px`,
+                        }}
+                    />
+                    <Tab
+                        label={t('income_tab_name')}
                         sx={{
                             ...styles.tabLabel,
                             fontSize: `${getFontSize()}px`,
@@ -68,14 +83,20 @@ const TabsComponent = (props: ITabsProps) => {
             <TabPanel value={value} index={0}>
             <div style={styles.tabContent}>
 
-            <SpendingLineChart  transactions={props.transactions} />      
+            <SpendingLineChart  transactions={props.balance_transactions} predictedTransactions={props.predicted_balance_transactions} />      
             </div>
         
             </TabPanel>
 
             <TabPanel value={value} index={1}>
                 <div style={styles.tabContent}>
-                    <SpendingLineChart  transactions={props.transactions} />
+                <BarChart transactions={props.spending_transactions} predictedTransactions={props.predicted_spending_transactions} /> 
+                </div>
+            </TabPanel>
+
+            <TabPanel value={value} index={2}>
+                <div style={styles.tabContent}>
+                <PieChart transactions={props.income_transactions} predictedTransactions={props.predicted_income_transactions} /> 
                 </div>
             </TabPanel>
         </Container>

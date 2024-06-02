@@ -1,13 +1,11 @@
 import  { useState, useEffect } from 'react';
-import { Line } from 'react-chartjs-2';
-import { useTranslation } from "react-i18next";
-
+import { Bar } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
   PointElement,
-  LineElement,
+  BarElement,
   TimeScale,
   TimeSeriesScale,
   Tooltip,
@@ -20,13 +18,15 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 
 import {TransactionTimeSeries} from "../../models/Transaction"
+import { useTranslation } from "react-i18next";
+
 
 
 ChartJS.register(
   CategoryScale,
   LinearScale,
   PointElement,
-  LineElement,
+  BarElement,
   TimeScale,
   TimeSeriesScale,
   Tooltip,
@@ -35,17 +35,16 @@ ChartJS.register(
 
 
 
-interface ILineChartProps {
+interface IBarChartProps {
   transactions: TransactionTimeSeries[];
-  predictedTransactions: TransactionTimeSeries[]; // Add predictedTransactions to props
-
+  predictedTransactions: TransactionTimeSeries[];
 }
 
 
 
-const SpendingLineChart  = ( props: ILineChartProps ) => {
-  const { t } = useTranslation();
+const BarChart  = ( props: IBarChartProps ) => {
 
+  const {t} = useTranslation();
 
   const [filteredData, setFilteredData] = useState<TransactionTimeSeries[]>([]);
   const [showPredictions, setShowPredictions] = useState(false); 
@@ -53,11 +52,11 @@ const SpendingLineChart  = ( props: ILineChartProps ) => {
 
 
   useEffect(() => {
-    setFilteredData(filterTransactions(props.transactions, 6));
+    setFilteredData(filterTransactions(props.transactions, 3)); 
   }, [props.transactions]);
 
   useEffect(() => {
-    showWithPredictions(filteredData);
+    showWithPredictions(filteredData); 
   }, [showPredictions]);
 
 
@@ -72,11 +71,12 @@ const SpendingLineChart  = ( props: ILineChartProps ) => {
   };
 
 
+
   const data = {
     labels: filteredData.map(transaction => transaction.datetime),
     datasets: [
       {
-        label: t('label_acc_balance'),
+        label: t('spending_label'),
         data: filteredData.map(transaction => ({
           x: transaction.datetime,
           y: parseFloat(transaction.sum)
@@ -85,7 +85,7 @@ const SpendingLineChart  = ( props: ILineChartProps ) => {
         backgroundColor: 'rgba(75, 192, 192, 0.5)',
       },
       showPredictions && {
-        label: 'Predicted Balance',
+        label: 'Predicted',
         data: props.predictedTransactions.map(transaction => ({
           x: transaction.datetime,
           y: parseFloat(transaction.sum)
@@ -100,23 +100,26 @@ const SpendingLineChart  = ( props: ILineChartProps ) => {
     setFilteredData(filterTransactions(props.transactions, months));
   };
 
+
   
 
   return (
     <Box sx={{ width: '100%', textAlign: 'center' }}>
       <Typography variant="h4" gutterBottom>
-        {t('balance_line_chart')}
+        {t('spending_bar_chart')}
       </Typography>
+
       {   filteredData.length > 5 ?  
-      <Line options={options} data={data} />
+      <Bar options={options} data={data} />
       :
       <Typography variant="h4">
       Not Enough Data
     </Typography> 
       } 
+      
       <ButtonGroup variant="contained" aria-label="outlined primary button group">
-        <Button onClick={() => handleTimeFrameChange(6)}>Last 6 Months</Button>
-        <Button onClick={() => handleTimeFrameChange(12)}>Last 12 Months</Button>
+        <Button onClick={() => handleTimeFrameChange(3)}>Last 3 Months</Button>
+        <Button onClick={() => handleTimeFrameChange(6)}>Last 6 Month</Button>
         <Button onClick={() => setShowPredictions(!showPredictions)}>
         {showPredictions ? 'Hide Predictions' : 'Show Predictions'}
       </Button>
@@ -125,39 +128,49 @@ const SpendingLineChart  = ( props: ILineChartProps ) => {
   );
 };
 
-
-
 const options = {
-  responsive: true,
-  plugins: {
-    legend: {
-      position: 'top' as const,
-    },
-    tooltip: {
-      mode: 'index' as const, // Ensure this is a valid string literal
-      intersect: false,
-    },
-    beginAtZero: false,
-  },
-  scales: {
-    x: {
-      type: 'time' as const, // Ensure this is a valid string literal
-      time: {
-        unit: 'month' as const, // Ensure this is a valid string literal
-        tooltipFormat: 'yyyy-MM-dd'
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top' as const,
       },
-      title: {
-        display: true,
-        text: 'Date'
+      tooltip: {
+        mode: 'index' as const,
+        intersect: false,
       }
     },
-    y: {
-      title: {
-        display: true,
-        text: 'Balance ($)'
-      }
-    }
-  }
-};
+    scales: {
+      x: {
+        type: 'time' as const,
+        time: {
+          unit: 'month' as const,
+          tooltipFormat: 'yyyy-MM-dd'
+        },
+        title: {
+          display: true,
+          text: 'Date'
+        },
+        beginAtZero: false,
 
-export default SpendingLineChart;
+      },
+      y: {
+        title: {
+          display: true,
+          text: 'Spendings'
+        },
+        beginAtZero: false
+      }
+    },
+    elements: {
+      bar: {
+        borderWidth: 2,
+        borderRadius: 4,
+        borderSkipped: false
+      }
+    },
+    barThickness: 'flex',
+    maxBarThickness: 80,
+  };
+  
+
+export default BarChart;

@@ -46,9 +46,10 @@ export class UserService extends AuthorizedApi {
   };
 
   
-  // public logout = async (): Promise<void> => {
-  //   return axios.post(BASE_URL + "Users/logout").then(() => {
-  //     window.localStorage.removeItem(AUTH_TOKEN)
-  //   })
-  // }
+  public logout = async (): Promise<void> => {
+    return axios.post(BASE_URL + "/auth/logout").then(() => {
+      window.localStorage.removeItem(AUTH_ACCESS_TOKEN)
+      window.localStorage.removeItem(AUTH_REFRESH_TOKEN)
+    })
+  }
 }

@@ -74,9 +74,11 @@ const ResponsiveAppBar = () => {
 
   const [openSettings, setOpenSettings] = React.useState(false);
 
-  const handleClickSettings = () => {
-    setOpenSettings(!openSettings);
+  const handleLogOut = () => {
+    userService.logout();
   };
+
+
 
   const handleCloseSettings = () => {
     setOpenSettings(false);
@@ -93,7 +95,7 @@ const ResponsiveAppBar = () => {
           <div style={styles.homeBtn} onClick={() => navigate("/")}>
             <CurrencyExchangeIcon />
             <Typography variant="h6" noWrap component="div" style={styles.typography}>
-             &nbsp;Manigurius Co. 
+             &nbsp; Finansea
             </Typography>
           </div>
           {isLoggedIn && (
@@ -128,16 +130,7 @@ const ResponsiveAppBar = () => {
                 anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
               >
                  
-                <ListItemButton onClick={handleClickSettings}>
-                  <ListItemIcon sx={styles.settingsIcons}>
-                    <Settings fontSize="small" />
-                  </ListItemIcon>
-                  <ListItemText primary={t('settings')} />
-                  {openSettings ? <ExpandLess /> : <ExpandMore />}
-                </ListItemButton>
-                <Collapse in={openSettings} timeout="auto" unmountOnExit>
-                  <List component="div" disablePadding>
-                    <ListItemButton sx={{ pl: 4 }} onClick={() => {
+                    <ListItemButton  onClick={() => {
                       handleClose();
                       handleCloseSettings();
                       navigate('/accounts')
@@ -147,8 +140,6 @@ const ResponsiveAppBar = () => {
                       </ListItemIcon>
                       <ListItemText primary={t('accounts')} />
                     </ListItemButton>
-                  </List>
-                </Collapse>
                 <ListItemButton onClick={handleClickLanguages}>
                   <ListItemIcon sx={styles.settingsIcons}>
                     <Language fontSize="small" />
@@ -175,9 +166,13 @@ const ResponsiveAppBar = () => {
                   handleClose();
                   handleCloseSettings();
                 }}>
-                  <ListItemIcon>
+                  <ListItemIcon  onClick={() => {
+                    handleClose();
+                    handleCloseSettings();
+                    handleLogOut();
+                  }} >
                     <Logout fontSize="small" />
-                  </ListItemIcon>
+                  </ListItemIcon >
                   {t('log_out')}
                 </MenuItem>
             

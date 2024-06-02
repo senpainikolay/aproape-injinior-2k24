@@ -72,5 +72,14 @@
   "select_file_type": "Select the file format for exporting transaction data:",
   "file_format": "File format",
   "export": "Export", 
-  "initial_currency_code" : "Currency"
+  "initial_currency_code" : "Currency",
+  "balance_line_chart" : "Balance Line Chart",
+  "label_acc_balance" : "Account Balance",
+  "balance_tab_name": "Balance",
+  "spending_tab_name": "Spending",
+  "income_tab_name": "Income", 
+  "income_label": "Account Income",
+  "income_pie_name": "Income Pie Chart",
+  "spending_label": "Spending",
+  "spending_bar_chart": "Spending Bar Chart"
 }

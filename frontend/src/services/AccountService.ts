@@ -1,7 +1,6 @@
 import { Transaction } from "../models/Transaction";
 import { Account,AccountPost } from "../models/Account";
 import { PaginationResponse} from "../models/PaginationResponse";
-
 import  AuthorizedApi from "./AuthorizedApi"; 
 
 export class AccountService extends AuthorizedApi {
@@ -40,8 +39,9 @@ export class AccountService extends AuthorizedApi {
 
     let instance = await this.getInstance();
 
-    return instance.get( `/user/account/` + accountId + "/transactions" + "?page=" +  String(pageNumber) +  "&limit=" + String(pageSize)  )
+    return instance.get(`/user/accounts/` + accountId + "/transactions" + "?page=" +  String(pageNumber) +  "&limit=" + String(pageSize)  )
     .then(response => {
+      console.log(response)
 
 
     const startIndex = (pageNumber - 1) * pageSize;
@@ -66,7 +66,7 @@ export class AccountService extends AuthorizedApi {
 
 
     })
-    .catch(error => Promise.reject(error) );
+    .catch(error => { console.log(error); return Promise.reject(error);  } );
 
   };
 //   public async getTotalBudget(): Promise<TotalBudgetFromWallets> {

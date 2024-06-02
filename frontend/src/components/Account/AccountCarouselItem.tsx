@@ -18,7 +18,7 @@ export const AccountCarouselItem = (props: CarouselItemProps) => {
             }} variant="outlined" sx={styles.accounts}>
                 <React.Fragment>
                     <CardContent>
-                        <Typography variant="h6" component="div">
+                        <Typography variant="h5" component="div">
                             {props.item.name}
                         </Typography>
                         <Typography sx={styles.balanceText} color="text.secondary">
@@ -34,11 +34,11 @@ export const AccountCarouselItem = (props: CarouselItemProps) => {
 
 const styles: { [key: string]: any } = {
     accounts: {
-        height: 85,
+        height: 100,
         borderBottom: "2px solid grey",
         cursor: "pointer"
     },
     balanceText: {
-        mb: 1.5
+        mb: 3.0
     }
 };

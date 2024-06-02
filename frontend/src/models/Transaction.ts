@@ -12,6 +12,7 @@ export interface Transaction  {
     description: string | undefined;
     payee: string;
     location: string; 
+    transaction_type_id?: string;
 };
 
 export interface ImgTransactionData  {
@@ -31,6 +32,28 @@ export interface TransactionBalanceTimeSeries{
     datetime: string;
     balance: string;
 };
+export interface TransactionTimeSeries{
+    datetime: string;
+    sum: string;
+};
+
+
+export interface PredictModel{
+    ds: string;
+    yhat: string;
+};
+
+
+export interface TransactionSpendingTimeSeries{
+    datetime: string;
+    spent_amount: string;
+};
+
+export interface TransactionIncomeTimeSeries{
+    datetime: string;
+    total_income: string;
+};
+
 
 
 
