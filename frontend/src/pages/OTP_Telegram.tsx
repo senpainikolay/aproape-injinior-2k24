@@ -48,7 +48,7 @@ const OTPForm: React.FC = () => {
     >
       <Grid item xs={12} sm={8} md={6} lg={4}>
         <Typography variant="h4" align="center" gutterBottom>
-          Enter Text to Generate OTP
+          Enter Telegram Username:
         </Typography>
         <Formik
           initialValues={{ text: "", account_id: "" }}

@@ -100,13 +100,15 @@ const PieChart = (props: ILineChartProps) => {
   };
 
   return (
-    <Box sx={{ alignContent: "center", textAlign: 'center' }}>
+    <Box sx={{ alignItems: "center", alignContent: "center", textAlign: 'center' }}>
       <Typography variant="h4" gutterBottom>
         {t('income_pie_name')}
       </Typography> 
 
       {   filteredData.length > 5 ?  
-      <Pie  options={options} data={data} /> 
+       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: "center", alignContent: "center", textAlign: 'center' }}>
+      <Pie  options={options} data={data} width={550} height={550}  /> 
+      </Box>
       :
       <Typography variant="h4">
       Not Enough Data
@@ -123,8 +125,9 @@ const PieChart = (props: ILineChartProps) => {
   );
 };
 
+
 const options = {
-  responsive: true,
+  responsive: false,
   plugins: {
     legend: {
       position: 'top' as const,
@@ -135,5 +138,7 @@ const options = {
     },
   },
 };
+
+
 
 export default PieChart;

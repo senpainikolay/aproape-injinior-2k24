@@ -68,7 +68,8 @@ const SpendingLineChart  = ( props: ILineChartProps ) => {
   };
 
   const showWithPredictions = (data: TransactionTimeSeries[]): TransactionTimeSeries[] => {
-    return data.concat(props.predictedTransactions);
+
+    return data.concat( props.predictedTransactions );
   };
 
 
@@ -154,7 +155,7 @@ const options = {
     y: {
       title: {
         display: true,
-        text: 'Balance ($)'
+        text: 'Spendings ($)'
       }
     }
   }

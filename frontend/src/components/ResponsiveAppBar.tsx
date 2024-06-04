@@ -96,7 +96,7 @@ const ResponsiveAppBar = () => {
           <div style={styles.homeBtn} onClick={() => navigate("/")}>
             <CurrencyExchangeIcon />
             <Typography variant="h6" noWrap component="div" style={styles.typography}>
-             &nbsp; Finansea
+             &nbsp; FinanSea
             </Typography>
           </div>
           {isLoggedIn && (

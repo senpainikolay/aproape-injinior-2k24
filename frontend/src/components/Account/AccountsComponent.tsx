@@ -101,7 +101,7 @@ export default function AccountsComponent(
                                         <ListItemText
                                             primary={item.name}
                                             secondary={
-                                                item.currency.name ? `${t('name')}: ${item.currency.name }` : ""
+                                                item.currency.name ? `${t('Currency')}: ${item.currency.code }` : ""
                                             }
                                         />
                                     </ListItem>

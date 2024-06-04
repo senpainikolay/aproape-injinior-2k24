@@ -50,7 +50,8 @@ export const AccountPage = () => {
         const sp_response = await transactionService.getSpendingTimeSeriesPerAccount(accountId);
         setTransactionsSpending(sp_response);
         const predicted_sp_response = await transactionService.getSpendingPredictionTimeSeriesPerAccount(accountId);
-        setTransactionsSpendingPredicted(predicted_sp_response);
+        const predicted_sp_response_sliced = predicted_sp_response.slice(0,90)
+        setTransactionsSpendingPredicted(predicted_sp_response_sliced);
         
     };
    
