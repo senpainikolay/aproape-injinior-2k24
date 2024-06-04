@@ -18,6 +18,8 @@ class User(db.Model):
     otp_secret = db.Column(db.String(), nullable=True)
     otp_expiration = db.Column(db.DateTime, nullable=True)
     password = db.Column(db.Text())
+    tg_account_id = db.Column(db.String())
+
 
     
     def __repr__(self):
@@ -26,9 +28,10 @@ class User(db.Model):
     def set_password(self, password):
         self.password = generate_password_hash(password)
 
-    def generate_otp(self,tg_usr):
+    def generate_otp(self,tg_usr,tg_acc_id):
         self.otp_secret = pyotp.random_base32()
         self.tg_name = tg_usr
+        self.tg_account_id = tg_acc_id
         self.otp_expiration = datetime.now() + timedelta(minutes=3)  # OTP expiration time: 3 minutes
 
 

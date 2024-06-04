@@ -14,6 +14,7 @@ import { Layout } from './HOC/Layout';
 
 import {SignUpPage} from "./pages/SignUp"
 import {SignInPage} from "./pages/SignIn"
+import OTPForm from "./pages/OTP_Telegram"
 
 
 
@@ -31,6 +32,7 @@ function App() {
               <Route path="/" element={<Home></Home>} />
               <Route path="/accounts" element={<Accounts />} />
               <Route path="/accounts/:id" element={<AccountPage />} />
+              <Route path="/otp" element={<OTPForm />} />
         </Route>
 
          <Route path="*" element={<NoMatch></NoMatch>} />

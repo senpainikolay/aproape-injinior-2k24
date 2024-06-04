@@ -4,6 +4,8 @@ import {
   LoginResponse,
   RegisterReq,
   GetUsrInfoResponse,
+  OTPReq,
+  OTPRes,
 } from "../models/User";
 import AuthorizedApi, { AUTH_ACCESS_TOKEN, AUTH_REFRESH_TOKEN } from "./AuthorizedApi"; 
 
@@ -31,6 +33,12 @@ export class UserService extends AuthorizedApi {
   public register = async  (user: RegisterReq) : Promise<void> => {
     return axios
     .post(BASE_URL + "/auth/register", user)
+  }
+
+  public generateOTP = async  (otp: OTPReq) : Promise<OTPRes> => {
+    return axios
+    .post(BASE_URL + "/auth/generate_otp", otp)
+    .then(response => response.data as OTPRes )
   }
 
 

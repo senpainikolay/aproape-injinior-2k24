@@ -11,9 +11,21 @@ services:
       - F_SECRET=Zrgt-X5lZmllFGLp7aEZiLSgBuMto64GUofPwJnVZDE=
       - H_SECRET=WTF
       deploy:
-        replicas: 2
+         replicas: 2
       networks:
           - bachelorthesis2024_default
+
+    un_ocr_nlp_service_unsec:
+      build: ocr-nlp-service-unsec
+      environment:
+      - FLASK_DEBUG=True
+      - NLP_CORPUS_MODEL=ro_core_news_sm
+      - PORT=7069
+      ports:
+        - 7069:7069
+      networks:
+          - bachelorthesis2024_default
+
 
     nginx:
       container_name: nginx

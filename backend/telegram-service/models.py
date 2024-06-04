@@ -55,7 +55,7 @@ class ImageExtractedDataStateManager:
     def to_transaction_entity(self):
         return {
             "amount": self.total,
-            "datetime": datetime.now(),
+            "datetime": datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%fZ"),
             "payee": self.entity,
             "description": "",
             "location": self.address,

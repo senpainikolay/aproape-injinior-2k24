@@ -102,7 +102,7 @@ export const AddTransactionPopup = (props: AddTransactionPopupProps) => {
             }); 
             setProcessingImage(false);
             }
-        ).catch(_ => {showErrorMessage("someht wrong with img processing"); setProcessingImage(false);} )
+        ).catch( err =>  {console.log(err); showErrorMessage("something wrong with img processing"); setProcessingImage(false);} )
      
         };
 

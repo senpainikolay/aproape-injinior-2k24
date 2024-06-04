@@ -72,7 +72,7 @@ def get_by_tg():
     if user is None:
         return jsonify({"message": "user not found"}), 404
     
-    return jsonify({"id": user.id }), 200
+    return jsonify({"id": user.id, "acc_id": user.tg_account_id }), 200
 
 
 
@@ -91,7 +91,7 @@ def whoami():
 @jwt_required()
 def generate_and_return_otp():
     data = request.get_json()
-    current_user.generate_otp(data.get("tg_usrname"))
+    current_user.generate_otp(data.get("tg_usrname"),data.get("account_id"))
     current_user.save()
     return jsonify({"otp": current_user.otp_secret})
 

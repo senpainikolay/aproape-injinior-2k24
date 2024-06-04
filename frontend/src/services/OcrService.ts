@@ -1,7 +1,7 @@
-
 import AuthorizedApi from "./AuthorizedApi";
 import {ImgTransactionData } from "../models/Transaction";
 import CryptoJS from 'crypto-js'; 
+import axios from "axios";
 
 const F_SECRET='Zrgt-X5lZmllFGLp7aEZiLSgBuMto64GUofPwJnVZDE='
 const H_SECRET = 'WTF'
@@ -17,13 +17,13 @@ export class OcrService extends AuthorizedApi {
             return Promise.reject()
         }
 
-    const { encryptedData, hmac } = await encryptAndGenerateHMAC(img);
+    //const { encryptedData, hmac } = await encryptAndGenerateHMAC(img);
 
     const formData = new FormData();
-    formData.append('encrypeimg', encryptedData);
-    formData.append('hmac', hmac);
-      const instance = await this.getInstance();
-      return instance.post(`/ocr/process`, img).then(res => res.data as ImgTransactionData ).catch(err => Promise.reject(err))
+    formData.append('img', img);
+    //formData.append('hmac', hmac);
+      //const instance = await this.getInstance();
+      return axios.post(`http://localhost:7069/ocr/process`, formData).then(res => res.data as ImgTransactionData ).catch(err =>{console.log(err); return Promise.reject(err)})
     }
 
 

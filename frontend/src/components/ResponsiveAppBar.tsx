@@ -21,6 +21,7 @@ import {
 import {  useEffect, useState } from "react";
 import React from "react";
 import { Settings, Logout, ExpandLess, ExpandMore, Language } from "@mui/icons-material";
+import TelegramIcon from '@mui/icons-material/Telegram';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import WalletIcon from '@mui/icons-material/Wallet';
 import { useTranslation } from "react-i18next";
@@ -161,6 +162,16 @@ const ResponsiveAppBar = () => {
                     </ListItemButton>
                   </List>
                 </Collapse> 
+                <ListItemButton  onClick={() => {
+                      handleClose();
+                      handleCloseSettings();
+                      navigate('/otp')
+                    }}>
+                      <ListItemIcon sx={styles.settingsIcons}>
+                        <TelegramIcon />
+                      </ListItemIcon>
+                      <ListItemText primary={t('Connect Telegram')} />
+                    </ListItemButton>
 
                 <MenuItem onClick={() => {
                   handleClose();

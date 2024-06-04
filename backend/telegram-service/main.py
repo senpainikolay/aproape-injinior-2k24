@@ -76,8 +76,8 @@ async def telegram_webhook(request: Request, message: TelegramMessage):
                         raise InformativeException(f"Write the data for the {img_data.modify_state}:")
                     elif txt == "Confirm":
                         Redis_Client.set(usr,"")
-                        acc = proccss_account_options()
-                        if add_transaction_succesful(usr,img_data.to_transaction_entity(),acc):
+                        acc_id = proccess_account_options(usr)
+                        if add_transaction_succesful(img_data.to_transaction_entity(),acc_id,chat_id):
                             raise InformativeException(f"Transaction saved.")
                         
                         raise InformativeException(f"Something Wrong with processing the transaction")
@@ -152,7 +152,7 @@ def check_user_registration(tg_msg,usr):
 def check_code_req(code,usr): 
     data = { "otp": code, "tg_usrname": usr}
 
-    response = requests.post(AUTH_API + "/validate_otp", json=data)
+    response = requests.post(AUTH_API + "/auth/validate_otp", json=data)
 
     if response.status_code == 200:
        Redis_Client.set(usr, "")
@@ -162,17 +162,29 @@ def check_code_req(code,usr):
     
 
 
-def add_transaction_succesful(usr,transaction,acc): 
+def add_transaction_succesful(transaction,acc_id,chat_id): 
+    tr_service_url =  TR_API + f"/accounts/{acc_id}/transactions"
+    res = requests.post(tr_service_url, json=transaction)
+    if res.status_code != 200:
+        send_message(chat_id, "debugging for tg add transaction")
+        send_message(chat_id,res.status_code)
+        return False
+    return True
+
+
+
+
+def proccess_account_options(usr):
     data = {  "tg_usrname": usr}
-    response = requests.post(AUTH_API + "/getbytg", json=data)
+    response = requests.post(AUTH_API + "/auth/getbytg", json=data)
 
     if response.status_code == 200:
-        usr_id = response.json().get('id')
-        tr_service_url =  TR_API + f"/users/{usr_id}/accounts/{acc}"
-        res = requests.post(tr_service_url, json=transaction)
-        if res.status_code == 200:
-            return True
-    return False
+        acc_id = response.json().get('acc_id')
+        return acc_id
+    else:
+        raise InformativeException(message="Something wrong with auth service :( ")
+
+    
 
 
     

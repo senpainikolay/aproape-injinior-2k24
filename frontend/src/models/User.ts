@@ -37,6 +37,14 @@ export interface LoginResponse {
     id: string;
     name: string;
   }
+
+  export interface OTPReq { 
+    tg_usrname: string;
+  }
+
+  export interface OTPRes { 
+    otp: string;
+  }
   
   
   
